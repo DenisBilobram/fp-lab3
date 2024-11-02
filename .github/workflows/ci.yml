@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: '27.0.1'
+          elixir-version: '1.17.2'
+
+      - name: Install Dependencies
+        run: mix deps.get
+
+      - name: Compile dependencies
+        run: mix compile
+
+      - name: Run credo linter
+        run: mix credo --strict
